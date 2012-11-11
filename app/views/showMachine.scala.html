@@ -1,8 +1,0 @@
-@(user: User, gym: Gym, machine: Machine, title: String = "Machine")(content: Html)
-
-@showGym(user, gym, title) {
-
-	@content
-
-	<a class="selected" href="@routes.Selection.listMachines(gym.id, true)">Machine: <strong>@machine.location @machine.name</strong></a>
-}

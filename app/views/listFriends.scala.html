@@ -1,12 +1,12 @@
-@(user: User, friends: Seq[com.restfb.types.User])
+@(gebruiker: Gebruiker, friends: Seq[com.restfb.types.User])
 
-@home(Some(user), "Your friends") {
+@home(gebruiker, "Je vrienden") {
     
     @if(!friends.isEmpty) {
 		@friends.map { friend =>
 	  		<a class="unselected" href="http://www.facebook.com/users/@friend.getId">@friend.getName</a>
 		} 
     } else {
-    	<p>None of your friends uses the Workout app.</p>
+    	<p>Geen van je vrienden gebruikt nog de Superdieren uitruil-app.</p>
     }
 }

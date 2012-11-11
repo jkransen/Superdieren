@@ -1,0 +1,35 @@
+@(gebruiker: Gebruiker, bezitting: List[(Kaart, Int)], kaartenForm: Form[(String, String)]) 
+@home(gebruiker, "Kaarten in je bezit") {
+
+<script>
+	$(document).ready(function() {
+		$('#reeks').tagit({
+			allowDuplicates : true,
+			pattern : /^\d{1,3}$/
+		});
+	});
+</script>
+
+<p>
+    @helper.form(action = routes.Kaarten.selectie) {
+    
+    	@helper.inputText(kaartenForm("reeks"))
+		
+		<input type="submit" name="actie" value="Toevoegen" />
+		<input type="submit" name="actie" value="Verwijderen" />
+	}
+</p>
+
+<p>
+De kaartjes die nu in je bezit zijn:<br/>
+
+@for((kaart, aantal) <- bezitting) {
+<span class="kaart">
+	<img src="@kaart.imageUrl"/>
+	<span>*@aantal</span>
+</span>
+}
+
+</p>
+
+}

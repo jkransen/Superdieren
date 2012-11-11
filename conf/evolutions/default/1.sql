@@ -3,54 +3,33 @@
 
 # --- !Downs
 
-DROP TABLE if exists Performances;
-DROP TABLE if exists Exercises;
-DROP TABLE if exists Machines;
-DROP TABLE if exists Gyms;
-DROP TABLE if exists Users;
-
+DROP TABLE if exists Bezitting;
+DROP TABLE if exists Kaart;
+DROP TABLE if exists Vriend;
+DROP TABLE if exists Gebruiker;
 
 # --- !Ups
  
-CREATE TABLE Users (
-    id BIGSERIAL,
-    email varchar(255) NOT NULL,
-    fullname varchar(255),
-    facebookusername varchar(255),
-    PRIMARY KEY (id)
+CREATE TABLE Gebruiker (
+    facebookId BIGINT NOT NULL,
+    aantalVerzamelingen smallint NOT NULL,
+    PRIMARY KEY (facebookId)
 );
 
-CREATE TABLE Gyms (
-    id BIGSERIAL,
-    name varchar(255) NOT NULL,
-    adminid bigint NOT NULL references Users,
-    PRIMARY KEY (id)
+CREATE TABLE Vriend (
+    eerste BIGINT NOT NULL references Gebruiker,
+    tweede BIGINT NOT NULL references Gebruiker,
+    PRIMARY KEY (eerste, tweede)
 );
 
-CREATE TABLE Machines (
-    id BIGSERIAL,
-    name  varchar(255),
-    location  varchar(255),
-    gymid bigint references Gyms,
-    PRIMARY KEY (id)
+CREATE TABLE Kaart (
+    nummer INT NOT NULL,
+    PRIMARY KEY(nummer)
 );
 
-CREATE TABLE Exercises (
-    id BIGSERIAL,
-    variation varchar(255),
-    musclezone varchar(255),
-    machineid bigint references Machines,
-    PRIMARY KEY (id)
+CREATE TABLE Bezitting (
+    gebruikerId BIGINT NOT NULL references Gebruiker,
+    kaartid INT NOT NULL, --  references Kaart,
+    aantal smallint,
+    PRIMARY KEY(gebruikerId, kaartId)
 );
-
-CREATE TABLE Performances (
-    id BIGSERIAL,
-    userid bigint NOT NULL references Users,
-    exerciseid bigint NOT NULL references Exercises,
-    weight numeric(4,1) NOT NULL,
-    notes varchar(255),
-    tstamp timestamp NOT NULL,
-    PRIMARY KEY (id)
-);
-
-

@@ -4,19 +4,18 @@ import play.api.GlobalSettings
 import play.api.mvc.Action
 import play.api.mvc.Controller
 
-import models.User
-import models.Gym
+import models.Gebruiker
 
 object Application extends Controller {
 
   def index = Action {
     request =>
       val session = request.session
-      session.get("connected").map { email =>
-        val user = User(email);
-        Ok(views.html.index(Some(user), "Hello, " + user.fullname + "!"))
+      session.get("connected").map { facebookId =>
+        val user = Gebruiker(facebookId.toLong);
+        Ok(views.html.index(user))
       }.getOrElse {
-        Ok(views.html.index(None, "Not logged in"))
+        Redirect(controllers.routes.Facebook.login)
       }
   }
 

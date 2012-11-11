@@ -1,0 +1,25 @@
+@(gebruiker: Gebruiker, tekort: List[(Kaart, Int)], tekortForm: Form[Int]) 
+@home(gebruiker, "Kaarten die je nog mist") {
+
+<p>
+    @helper.form(action = routes.Kaarten.nieuwAantalVerzamelingen) {
+    
+    	@helper.inputText(tekortForm("aantalVerzamelingen"))
+		
+		<input type="submit" value="Opslaan" />
+	}
+</p>
+
+<p>
+De kaartjes die je nog nodig hebt om @gebruiker.aantalVerzamelingen verzamelingen te krijgen:<br/>
+
+@for((kaart, aantal) <- tekort) {
+<span class="kaart">
+	<img src="@kaart.imageUrl"/>
+	<span>*@aantal</span>
+</span>
+}
+
+</p>
+
+}

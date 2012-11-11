@@ -1,20 +1,22 @@
-Workout application
-==========================================================================
+Facebook app voor uitwisselen van Superdieren kaartjes
+======================================================
 
-This is a workout management app, where a user can track his progress 
-at their gyms. It will be designed to register gyms, machines, exercises 
-and the weight and progress that individual users make. Typical use cases 
-are:
+Dit programma zal draaien als Facebook app. Iedere
+gebruiker geeft aan welke kaartjes hij in bezit heeft.
+De app zal dan suggesties doen aan wie je welke
+kaartjes kunt geven om een zo compleet mogelijke 
+verzameling te krijgen.
 
-- Add exercise
-- Add workout performance
-- Track increase in workout level
-- Get hints what workouts have not been done for a long period of time
-- Compare progress with friends
+De bedoeling is dat transitief gekeken wordt, dus ook
+vrienden van vrienden enzovoort.
 
-Users log in through Facebook or Google. Data is stored in a centralized
-PostgreSQL database. Play and Scala are used for platform and language.
-Squeryl is the Scala ORM. The app is developed with deployment to Heroku
-in mind, but can be deployed and run anywhere with a PostgreSQL database
-without modifications (other than configuration).
+Er zijn op moment van schrijven 17 sets van 12
+kaartjes, dus 204 kaartjes totaal. 
 
+Gebruiker kan aangeven hoeveel complete verzamelingen
+hij wil sparen. Dit kan dus ook 0 zijn als je alles 
+wilt weggeven. Maximum is dat je het aantal kaartjes 
+dat je in bezit hebt aanvult tot een aantal complete
+verzamelingen dat één groter is. Dus om 2 verzamelingen
+te kunnen aangeven, moet je ten minste 205 kaartjes 
+hebben.

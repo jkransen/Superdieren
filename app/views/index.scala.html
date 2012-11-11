@@ -1,11 +1,11 @@
-@(user: Option[User], message: String)
+@(gebruiker: Gebruiker)
 
-@home(user, "Workout") {
+@home(gebruiker, "Superdieren uitruil-app") {
 
-	<p>@message</p>
-
-	@if(user.isDefined) {
-	<a class="unselected" href="@routes.Selection.listGyms(false)">Select workout</a>
-	<a class="unselected" href="@routes.Facebook.listFacebookFriends">Friends</a>
-	}
+	<p>Met deze app kun je je Superdieren kaartjes bijhouden. Je kunt ze ruilen met je Facebook vrienden
+	en kijken welke je nog mist.</p>
+	
+	<p>Deze app is een particulier initiatief, en is op geen enkele manier gerelateerd aan Albert Heijn, het Wereld Natuur Fonds 
+	of Nickelodeon. Superdieren en de kaartjes zijn intellectueel eigendom van voorgenoemden. 
+	</p>
 }

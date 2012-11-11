@@ -1,13 +1,12 @@
-@(user: Option[User], title: String = "Workout")(content: Html)
+@(user: Gebruiker, title: String = "Superdieren")(content: Html)
 
 @main(title) {
 
+    <a href="@routes.Application.index">Home</a>
+    <a href="@routes.Kaarten.overzichtBezit">Je kaarten</a>
+    <a href="@routes.Kaarten.overzichtTekort">Ontbrekende kaarten</a>
+	<a href="@routes.Facebook.listFacebookFriends">Vrienden</a>
+    
 	@content
 
-    <a class="selected" href="@routes.Application.index">Home</a>
-	@if(user.isDefined) {
-	  <a class="selected" href="@routes.Application.logout">Logout</a>
-    } else {
-	  <a class="unselected" href="@routes.Application.login">Login</a>
-    }
 }
