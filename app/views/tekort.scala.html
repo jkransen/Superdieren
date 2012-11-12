@@ -11,15 +11,20 @@
 </p>
 
 <p>
-De kaartjes die je nog nodig hebt om @gebruiker.aantalVerzamelingen verzamelingen te krijgen:<br/>
+	De kaarten die je nog nodig hebt om @gebruiker.aantalVerzamelingen complete 
+	@if(gebruiker.aantalVerzamelingen == 1) {
+	verzameling
+	} else {
+	verzamelingen
+	}
+	te krijgen:<br/>
 
-@for((kaart, aantal) <- tekort) {
-<span class="kaart">
-	<img src="@kaart.imageUrl"/>
-	<span>*@aantal</span>
-</span>
-}
-
+	@for((kaart, aantal) <- tekort) {
+	<span class="kaart">
+		<img src="@kaart.imageUrl"/>
+		<span>*@aantal</span>
+	</span>
+	}
 </p>
 
 }

@@ -9,7 +9,7 @@ application.secret="run 'play secret' to create one"
 
 # The application languages
 # ~~~~~
-application.langs="en"
+application.langs="nl"
 
 # Global object class
 # ~~~~~
@@ -26,7 +26,6 @@ db.default.driver=org.postgresql.Driver
 db.default.url="jdbc:postgresql://host/db"
 db.default.user=workout
 db.default.password="secret"
-#db.default.jndiName=DefaultDS
 
 # Evolutions
 # ~~~~~
@@ -48,10 +47,11 @@ logger.application=DEBUG
 
 ############
 # Application specific settings
+kaarturl="http://superdieren.nickelodeon.nl/flash/kaartjes/C$SET_$INDEX.png"
+aantalsets = 17
+aantalperset = 12
+
 facebook.app_id=""
 facebook.app_secret=""
-facebook.redirect_url="http://somehost/facebook/login2"
+oauth.base_redirect_url="http://superdieren.cloudfoundry.com"
 
-google.client_id=".apps.googleusercontent.com"
-google.client_secret=""
-google.redirect_url="http://somehost/google/oauth2callback"

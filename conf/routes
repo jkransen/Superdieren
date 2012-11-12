@@ -20,5 +20,9 @@ GET     /kaarten/tekort          	controllers.Kaarten.overzichtTekort
 POST    /kaarten/selectie           controllers.Kaarten.selectie
 POST    /kaarten/nieuwAantal        controllers.Kaarten.nieuwAantalVerzamelingen
 
+GET     /gebruikers/:facebookId/           controllers.Gebruikers.selecteer(facebookId: String)
+GET     /gebruikers/:facebookId/teKrijgen  controllers.Gebruikers.teKrijgen(facebookId: String)
+GET     /gebruikers/:facebookId/teGeven    controllers.Gebruikers.teGeven(facebookId: String)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

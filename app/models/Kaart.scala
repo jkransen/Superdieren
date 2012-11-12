@@ -27,6 +27,8 @@ object Kaart {
   val perSerie = 12
   val totaalAantal = aantalSeries * perSerie
 
+  type KaartVerzameling = List[(Kaart, Int)]
+
   def apply(serie: Int, index: Int): Kaart = {
     Kaart((serie - 1) * perSerie + index)
   }
@@ -35,7 +37,7 @@ object Kaart {
     for (i <- 1 to aantalSeries * perSerie) yield Kaart(i)
   }
 
-  def bewaarBezittingen(gebruiker: Gebruiker, bezittingen: List[(Kaart, Int)]) {
+  def bewaarBezittingen(gebruiker: Gebruiker, bezittingen: KaartVerzameling) {
     DB.withConnection { implicit c =>
       SQL("delete from Bezitting where gebruikerId = {facebookId}")
         .on("facebookId" -> gebruiker.facebookId).executeUpdate
@@ -46,16 +48,24 @@ object Kaart {
     }
   }
 
-  def laadBezittingen(gebruiker: Gebruiker): List[(Kaart, Int)] = {
+  def laadBezittingen(gebruiker: Gebruiker): KaartVerzameling = {
     DB.withConnection { implicit c =>
       val query = SQL("select kaartid, aantal from Bezitting where gebruikerId = {facebookId} order by kaartId")
         .on("facebookId" -> gebruiker.facebookId)
       query().map((row => (Kaart(row[Int]("kaartid")), row[Int]("aantal")))).toList
     }
   }
+  
+  def laadOverschot(gebruiker: Gebruiker): KaartVerzameling = {
+    val zelfHouden = gebruiker.aantalVerzamelingen
+    val overschot = laadBezittingen(gebruiker) map {
+      case (kaart, aantal) => (kaart, aantal - zelfHouden)
+    }
+    filterNullen(overschot)
+  }
 
-  def laadTekort(gebruiker: Gebruiker): List[(Kaart, Int)] = {
-    def loadTekort0(kaartenNodig: List[(Kaart, Int)], kaartenBezit: List[(Kaart, Int)], tussenResultaat: List[(Kaart, Int)]): List[(Kaart, Int)] = {
+  def laadTekort(gebruiker: Gebruiker): KaartVerzameling = {
+    def laadTekort0(kaartenNodig: KaartVerzameling, kaartenBezit: KaartVerzameling, tussenResultaat: KaartVerzameling): KaartVerzameling = {
       if (kaartenNodig.isEmpty)
         tussenResultaat
       else if (kaartenBezit.isEmpty)
@@ -63,11 +73,11 @@ object Kaart {
       else {
         (kaartenNodig.head, kaartenBezit.head) match {
           case ((nodigKaart, nodigAantal), (bezitKaart, _)) if (nodigKaart < bezitKaart) =>
-            loadTekort0(kaartenNodig.tail, kaartenBezit, tussenResultaat ++ List((nodigKaart, nodigAantal)))
+            laadTekort0(kaartenNodig.tail, kaartenBezit, tussenResultaat ++ List((nodigKaart, nodigAantal)))
           case ((nodigKaart, nodigAantal), (_, bezitAantal)) if (bezitAantal >= nodigAantal) =>
-            loadTekort0(kaartenNodig.tail, kaartenBezit.tail, tussenResultaat)
+            laadTekort0(kaartenNodig.tail, kaartenBezit.tail, tussenResultaat)
           case ((nodigKaart, nodigAantal), (_, bezitAantal)) =>
-            loadTekort0(kaartenNodig.tail, kaartenBezit.tail, tussenResultaat ++ List((nodigKaart, nodigAantal - bezitAantal)))
+            laadTekort0(kaartenNodig.tail, kaartenBezit.tail, tussenResultaat ++ List((nodigKaart, nodigAantal - bezitAantal)))
         }
       }
     }
@@ -75,17 +85,25 @@ object Kaart {
     val aantalVerzamelingen = gebruiker.aantalVerzamelingen
     val bezittingen = laadBezittingen(gebruiker)
     val kaartenNodig = for (kaart <- Kaart.alle) yield (kaart, aantalVerzamelingen)
-    loadTekort0(kaartenNodig.toList, bezittingen, List())
+    val tekort = laadTekort0(kaartenNodig.toList, bezittingen, List())
+    filterNullen(tekort)
+  }
+  
+  def filterNullen(metNullen: KaartVerzameling): KaartVerzameling = {
+    metNullen filter {
+      case (kaart, aantal) => aantal > 0
+    }
   }
 
-  def sorteer(unsorted: Map[Kaart, Int]): List[(Kaart, Int)] = {
+  def sorteer(unsorted: Map[Kaart, Int]): KaartVerzameling = {
     unsorted.toList.sortWith {
       case ((kaart1, _), (kaart2, _)) => kaart1 < kaart2
     }
   }
 
+  // Voegt de geselecteerde kaarten toe aan het bestaande bezit van deze gebruiker
   def voegToe(gebruiker: Gebruiker, selectie: Map[Kaart, Int]) {
-    def voegToe0(bestaandBezit: List[(Kaart, Int)], uitbreiding: List[(Kaart, Int)], tussenResultaat: List[(Kaart, Int)]): List[(Kaart, Int)] = {
+    def voegToe0(bestaandBezit: KaartVerzameling, uitbreiding: KaartVerzameling, tussenResultaat: KaartVerzameling): KaartVerzameling = {
       if (uitbreiding.isEmpty) {
         tussenResultaat ++ bestaandBezit
       } else if (bestaandBezit.isEmpty) {
@@ -102,15 +120,15 @@ object Kaart {
       }
     }
 
-    val bestaandBezit: List[(Kaart, Int)] = Kaart.laadBezittingen(gebruiker)
+    val bestaandBezit = Kaart.laadBezittingen(gebruiker)
     val uitbreiding = sorteer(selectie)
-
     val nieuwBezit = voegToe0(bestaandBezit, uitbreiding, List())
     Kaart.bewaarBezittingen(gebruiker, nieuwBezit)
   }
 
+  // Trekt de geselecteerde kaarten af van het bestaande bezit van deze gebruiker
   def trekAf(gebruiker: Gebruiker, selectie: Map[Kaart, Int]) {
-    def trekAf0(bestaandBezit: List[(Kaart, Int)], inperking: List[(Kaart, Int)], tussenResultaat: List[(Kaart, Int)]): List[(Kaart, Int)] = {
+    def trekAf0(bestaandBezit: KaartVerzameling, inperking: KaartVerzameling, tussenResultaat: KaartVerzameling): KaartVerzameling = {
       if (inperking.isEmpty) {
         tussenResultaat ++ bestaandBezit
       } else if (bestaandBezit.isEmpty) {
@@ -132,10 +150,25 @@ object Kaart {
       }
     }
 
-    val bestaandBezit: List[(Kaart, Int)] = Kaart.laadBezittingen(gebruiker)
+    val bestaandBezit = Kaart.laadBezittingen(gebruiker)
     val inperking = sorteer(selectie)
-
     val nieuwBezit = trekAf0(bestaandBezit, inperking, List())
     Kaart.bewaarBezittingen(gebruiker, nieuwBezit)
+  }
+
+  // Geeft alle kaarten die in beide gegeven verzamelingen voorkomen
+  def verenig(verzameling1: KaartVerzameling, verzameling2: KaartVerzameling): KaartVerzameling = {
+    if (verzameling1.isEmpty || verzameling2.isEmpty) {
+      List()
+    } else {
+      (verzameling1.head, verzameling2.head) match {
+        case ((kaart1, _), (kaart2, _)) if (kaart1 < kaart2) =>
+          verenig(verzameling1.tail, verzameling2)
+        case ((kaart1, _), (kaart2, _)) if (kaart1 > kaart2) =>
+          verenig(verzameling1, verzameling2.tail)
+        case ((kaart1, aantal1), (_, aantal2)) =>
+          (kaart1, aantal1 min aantal2) :: verenig(verzameling1.tail, verzameling2.tail)
+      }
+    }
   }
 }

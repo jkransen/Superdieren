@@ -22,7 +22,7 @@ object Kaarten extends Controller {
     request =>
       val session = request.session
       session.get("connected").map { facebookId =>
-        val gebruiker = Gebruiker(facebookId.toLong);
+        val gebruiker = Gebruiker(facebookId.toLong)
         doeMetGebruiker(gebruiker)
       }.getOrElse {
         Redirect(controllers.routes.Facebook.login)
@@ -44,7 +44,7 @@ object Kaarten extends Controller {
   def selectie = Action {
     implicit request =>
       session.get("connected").map { facebookId =>
-        val gebruiker = Gebruiker(facebookId.toLong);
+        val gebruiker = Gebruiker(facebookId.toLong)
         form.bindFromRequest.fold(
           failure => BadRequest,
           filledForm => {
@@ -70,7 +70,7 @@ object Kaarten extends Controller {
   def nieuwAantalVerzamelingen = Action {
     implicit request =>
       session.get("connected").map { facebookId =>
-        val gebruiker = Gebruiker(facebookId.toLong);
+        val gebruiker = Gebruiker(facebookId.toLong)
         aantalVerzamelingenform.bindFromRequest.fold(
           failure => BadRequest,
           filledForm => {
