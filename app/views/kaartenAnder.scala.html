@@ -2,11 +2,11 @@
 @home(gebruiker, "Kaarten in bezit") {
 
 <p>
-@gebruiker match { case Some(Gebruiker) => {
+@if(gebruiker.isDefined) {
 	<a href="@routes.Gebruikers.teKrijgen(vriend.facebookId.toString)">Kaarten die je van deze gebruiker zou kunnen krijgen</a><br/>
 	<a href="@routes.Gebruikers.teGeven(vriend.facebookId.toString)">Kaarten die je aan deze gebruiker zou kunnen geven</a><br/>
 	<br/>
-} }
+}
 
 @melding:<br/>
 
