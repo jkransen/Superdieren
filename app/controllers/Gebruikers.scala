@@ -12,23 +12,14 @@ object Gebruikers extends Controller {
 
   def selecteer(anderFacebookId: String) = Action {
     request =>
-      val session = request.session
-      session.get("connected").map { eigenFacebookId =>
-        val gebruiker = Gebruiker(eigenFacebookId.toLong)
-        val vriend = Gebruiker(anderFacebookId.toLong)
-
-        val bezittingenVriend = Kaart.laadBezittingen(vriend)
-
-        Ok(views.html.kaartenAnder(gebruiker, vriend, bezittingenVriend))
-      }.getOrElse {
-        Redirect(controllers.routes.Facebook.login)
-      }
+      val vriend = Gebruiker(anderFacebookId.toLong)
+      val bezittingenVriend = Kaart.laadBezittingen(vriend)
+      Ok(views.html.kaartenAnder(None, vriend, bezittingenVriend))
   }
 
   def teKrijgen(anderFacebookId: String) = Action {
     request =>
-      val session = request.session
-      session.get("connected").map { eigenFacebookId =>
+      request.session.get("connected").map { eigenFacebookId =>
         val gebruiker = Gebruiker(eigenFacebookId.toLong)
         val vriend = Gebruiker(anderFacebookId.toLong)
 
@@ -44,8 +35,7 @@ object Gebruikers extends Controller {
 
   def teGeven(anderFacebookId: String) = Action {
     request =>
-      val session = request.session
-      session.get("connected").map { eigenFacebookId =>
+      request.session.get("connected").map { eigenFacebookId =>
         val gebruiker = Gebruiker(eigenFacebookId.toLong)
         val vriend = Gebruiker(anderFacebookId.toLong)
 

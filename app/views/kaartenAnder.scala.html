@@ -1,10 +1,13 @@
-@(gebruiker: Gebruiker, vriend: Gebruiker, kaarten: List[(Kaart, Int)], melding: String = "De kaarten die nu in het bezit zijn van deze gebruiker", meldingLeeg: String = "De gebruiker heeft nog geen kaarten.") 
+@(gebruiker: Option[Gebruiker], vriend: Gebruiker, kaarten: List[(Kaart, Int)], melding: String = "De kaarten die nu in het bezit zijn van deze gebruiker", meldingLeeg: String = "De gebruiker heeft nog geen kaarten.") 
 @home(gebruiker, "Kaarten in bezit") {
 
 <p>
-<a href="@routes.Gebruikers.teKrijgen(vriend.facebookId.toString)">Kaarten die je van deze gebruiker zou kunnen krijgen</a><br/>
-<a href="@routes.Gebruikers.teGeven(vriend.facebookId.toString)">Kaarten die je aan deze gebruiker zou kunnen geven</a><br/>
-<br/>
+@gebruiker match { case Some(Gebruiker) => {
+	<a href="@routes.Gebruikers.teKrijgen(vriend.facebookId.toString)">Kaarten die je van deze gebruiker zou kunnen krijgen</a><br/>
+	<a href="@routes.Gebruikers.teGeven(vriend.facebookId.toString)">Kaarten die je aan deze gebruiker zou kunnen geven</a><br/>
+	<br/>
+} }
+
 @melding:<br/>
 
 @for((kaart, aantal) <- kaarten) {

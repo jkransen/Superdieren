@@ -1,6 +1,6 @@
 @(gebruiker: Gebruiker, vrienden: Seq[com.restfb.types.User])
 
-@home(gebruiker, "Je vrienden") {
+@home(Some(gebruiker), "Je vrienden") {
     
     @if(!vrienden.isEmpty) {
 	    <ul>

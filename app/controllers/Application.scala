@@ -10,17 +10,14 @@ object Application extends Controller {
 
   def index = Action {
     request =>
-      val session = request.session
-      session.get("connected").map { facebookId =>
-        val user = Gebruiker(facebookId.toLong);
-        Ok(views.html.index(user))
-      }.getOrElse {
-        Redirect(controllers.routes.Facebook.login)
+      val gebruiker = request.session.get("connected").map { eigenFacebookId =>
+        Gebruiker(eigenFacebookId.toLong)
       }
+      Ok(views.html.index(gebruiker))
   }
 
   def login = Action {
-    Ok(views.html.login())
+    Redirect(controllers.routes.Facebook.login)
   }
 
   def logout = Action {

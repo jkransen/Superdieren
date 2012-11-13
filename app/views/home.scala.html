@@ -1,11 +1,18 @@
-@(user: Gebruiker, title: String = "Superdieren")(content: Html)
+@(user: Option[Gebruiker], title: String = "Superdieren")(content: Html)
 
 @main(title) {
 
     <a href="@routes.Application.index">Home</a>
+    
+    @user match { 
+    	case Some(gebruiker) => {
     <a href="@routes.Kaarten.overzichtBezit">Je kaarten</a>
     <a href="@routes.Kaarten.overzichtTekort">Ontbrekende kaarten</a>
 	<a href="@routes.Facebook.listFacebookFriends">Vrienden</a>
+    	} case None => {
+    <a href="@routes.Application.login">Inloggen</a>
+    	}
+    }
     
 	@content
 

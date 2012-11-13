@@ -1,5 +1,5 @@
 @(gebruiker: Gebruiker, tekort: List[(Kaart, Int)], tekortForm: Form[Int]) 
-@home(gebruiker, "Kaarten die je nog mist") {
+@home(Some(gebruiker), "Kaarten die je nog mist") {
 
 <p>
     @helper.form(action = routes.Kaarten.nieuwAantalVerzamelingen) {

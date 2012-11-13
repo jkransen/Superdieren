@@ -1,5 +1,5 @@
 @(gebruiker: Gebruiker, bezitting: List[(Kaart, Int)], kaartenForm: Form[(String, String)]) 
-@home(gebruiker, "Kaarten in je bezit") {
+@home(Some(gebruiker), "Kaarten in je bezit") {
 
 <script>
 	$(document).ready(function() {

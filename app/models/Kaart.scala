@@ -27,6 +27,7 @@ object Kaart {
   val perSerie = 12
   val totaalAantal = aantalSeries * perSerie
 
+  // de kaart zelf, en het aantal ervan in de verzameling, gesorteerd op kaart
   type KaartVerzameling = List[(Kaart, Int)]
 
   def apply(serie: Int, index: Int): Kaart = {
