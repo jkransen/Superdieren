@@ -12,9 +12,24 @@ object Gebruikers extends Controller {
 
   def selecteer(anderFacebookId: String) = Action {
     request =>
+      val gebruiker = request.session.get("connected").map { eigenFacebookId =>
+        Gebruiker(eigenFacebookId.toLong)
+      }
+
       val vriend = Gebruiker(anderFacebookId.toLong)
       val bezittingenVriend = Kaart.laadBezittingen(vriend)
-      Ok(views.html.kaartenAnder(None, vriend, bezittingenVriend))
+      Ok(views.html.kaartenAnder(gebruiker, vriend, bezittingenVriend))
+  }
+
+  def tekort(anderFacebookId: String) = Action {
+    request =>
+      val gebruiker = request.session.get("connected").map { eigenFacebookId =>
+        Gebruiker(eigenFacebookId.toLong)
+      }
+
+      val vriend = Gebruiker(anderFacebookId.toLong)
+      val tekortVriend = Kaart.laadTekort(vriend)
+      Ok(views.html.tekortAnder(gebruiker, vriend, tekortVriend))
   }
 
   def teKrijgen(anderFacebookId: String) = Action {

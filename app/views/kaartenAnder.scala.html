@@ -1,8 +1,9 @@
-@(gebruiker: Option[Gebruiker], vriend: Gebruiker, kaarten: List[(Kaart, Int)], melding: String = "De kaarten die nu in het bezit zijn van deze gebruiker", meldingLeeg: String = "De gebruiker heeft nog geen kaarten.") 
-@home(gebruiker, "Kaarten in bezit") {
+@(gebruiker: Option[Gebruiker], vriend: Gebruiker, kaarten: List[(Kaart, Int)], melding: String = "De kaarten die nu in het bezit zijn van deze gebruiker", meldingLeeg: String = "De gebruiker heeft nog geen kaarten.", titel: String = "Kaarten in bezit") 
+@home(gebruiker, titel) {
 
 <p>
 @if(gebruiker.isDefined) {
+	<a href="@routes.Gebruikers.tekort(vriend.facebookId.toString)">Kaarten die deze gebruiker nog mist</a><br/>
 	<a href="@routes.Gebruikers.teKrijgen(vriend.facebookId.toString)">Kaarten die je van deze gebruiker zou kunnen krijgen</a><br/>
 	<a href="@routes.Gebruikers.teGeven(vriend.facebookId.toString)">Kaarten die je aan deze gebruiker zou kunnen geven</a><br/>
 	<br/>

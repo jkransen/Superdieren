@@ -21,6 +21,7 @@ POST    /kaarten/selectie           controllers.Kaarten.selectie
 POST    /kaarten/nieuwAantal        controllers.Kaarten.nieuwAantalVerzamelingen
 
 GET     /gebruikers/:facebookId/           controllers.Gebruikers.selecteer(facebookId: String)
+GET     /gebruikers/:facebookId/tekort     controllers.Gebruikers.tekort(facebookId: String)
 GET     /gebruikers/:facebookId/teKrijgen  controllers.Gebruikers.teKrijgen(facebookId: String)
 GET     /gebruikers/:facebookId/teGeven    controllers.Gebruikers.teGeven(facebookId: String)
 
