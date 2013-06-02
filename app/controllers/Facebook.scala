@@ -8,6 +8,7 @@ import models.Gebruiker
 import scala.util.matching.Regex
 import com.restfb.DefaultFacebookClient
 import scala.collection.JavaConversions._
+import scala.concurrent.ExecutionContext.Implicits._
 
 object Facebook extends Controller {
 
@@ -64,11 +65,18 @@ object Facebook extends Controller {
 
   def doWithAccessToken(code: String, redirectUrl: String)(accessTokenHandler: ((String, String) => Result)): Result = {
     val accessTokenUrl = "https://graph.facebook.com/oauth/access_token?client_id=" + appId + "&client_secret=" + appSecret + "&code=" + code + "&redirect_uri=" + redirectUrl
-    val accessTokenBody = WS.url(accessTokenUrl).get().value.get.body
-    val regex = new Regex("access_token=(.*)&expires=(.*)")
-    accessTokenBody match {
-      case regex(accessToken, expires) => {
-        accessTokenHandler(accessToken, expires)
+    //    val accessTokenBody = WS.url(accessTokenUrl).get().value.get.get.body
+
+    Async {
+      WS.url(accessTokenUrl).get().map { response =>
+        val accessTokenBody = response.body
+        val regex = new Regex("access_token=(.*)&expires=(.*)")
+        accessTokenBody match {
+          case regex(accessToken, expires) => {
+            accessTokenHandler(accessToken, expires)
+          }
+        }
+//        Ok("Feed title: " + (response.json \ "title").as[String])
       }
     }
   }

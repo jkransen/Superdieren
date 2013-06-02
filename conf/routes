@@ -9,7 +9,7 @@ GET     /logout    controllers.Application.logout
 
 GET     /facebook/login             controllers.Facebook.login
 GET     /facebook/login/            controllers.Facebook.loginWithParams(ref: Option[String], code: Option[String])
-POST    /facebook/canvas?*trash     controllers.Facebook.canvasTrash(trash: Option[String])
+# POST    /facebook/canvas?*trash     controllers.Facebook.canvasTrash(trash: Option[String])
 POST    /facebook/canvas            controllers.Facebook.canvas
 GET     /facebook/login2            controllers.Facebook.login2(code: String)
 GET     /facebook/listFriends       controllers.Facebook.listFacebookFriends
